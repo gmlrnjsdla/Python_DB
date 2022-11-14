@@ -2,21 +2,27 @@ import pymysql
 
 
 
-con = pymysql.connect(host='127.0.0.1', user='root', password='1234', db='sqldb', charset='utf8')
+con = pymysql.connect(host='localhost', user='root', password='1234', db='sqldb', charset='utf8')
 cur = con.cursor()
-sql = "SELECT * FROM usertbl"
-cur.execute(sql)
-while(True):
-    row = cur.fetchone()
-    if row == None:
-        break
-    id = row[0]
-    name = row[1]
-    email = row[2]
-    birthYear = row[3]
-    print('%s %s %s %s'%(id,name,email,birthYear))
+sql = "DELETE FROM threetbl"
 
+cur.execute(sql)
+con.commit()
 con.close()
+
+
+
+# while(True):
+#     row = cur.fetchone()
+#     if row == None:
+#         break
+#     id = row[0]
+#     name = row[1]
+#     email = row[2]
+#     birthYear = row[3]
+#     print('%s %s %s %s'%(id,name,email,birthYear))
+
+# con.close()
 
 # sql = 'CREATE TABLE if not exists threeTbl(id char(), ' \
 #       'userName char(15), email char(20), birthYear int)'
