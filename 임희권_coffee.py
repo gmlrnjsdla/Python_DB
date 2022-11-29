@@ -9,12 +9,8 @@ import pymysql
 con = pymysql.connect(host='localhost', user='root', password='1234', db='iciDB', charset='utf8')
 cur = con.cursor()
 
-# 스키마 생성 및 테이블 생성 sql querry
-# sql = 'CREATE TABLE `icidb`.`coffeeTBL` (`name` VARCHAR(45) NOT NULL,`address` VARCHAR(45) NULL,`phone` VARCHAR(45) NULL,PRIMARY KEY (`name`))';
-
-
 #[CODE 1]
-def hollys_store(result):
+def hollys_store():
     for page in range(1,54):
         Hollys_url = 'https://www.hollys.co.kr/store/korea/korStore.do?pageNo=%d&sido=&gugun=&store=' %page
         print(Hollys_url)
@@ -26,27 +22,21 @@ def hollys_store(result):
                 break
             store_td = store.find_all('td')
             store_name = store_td[1].string
-            store_sido = store_td[0].string
             store_address = store_td[3].string
             store_phone = store_td[5].string
-            result.append([store_name]+[store_sido]+[store_address]
-                          +[store_phone])
 
-        sql = "INSERT INTO coffeetbl(name,address,phone) VALUES('{0}','{1}','{2}')".format(store_name,store_address,store_phone)
+            sql = "INSERT INTO coffeetbl(name,address,phone) VALUES('{0}','{1}','{2}')".format(store_name,store_address,store_phone)
+            cur.execute(sql)
 
-        cur.execute(sql)
     con.commit()
     con.close()
     return
 
 #[CODE 0]
 def main():
-    result = []
     print('Hollys store crawling >>>>>>>>>>>>>>>>>>>>>>>>>>')
-    hollys_store(result)   #[CODE 1] 호출 
-    hollys_tbl = pd.DataFrame(result, columns=('store', 'sido-gu', 'address','phone'))
-    hollys_tbl.to_csv('hollys.csv', encoding='cp949', mode='w', index=True)
-    del result[:]
+    hollys_store()   #[CODE 1] 호출
+
        
 if __name__ == '__main__':
      main()
